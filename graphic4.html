@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <style>
+  body {
+    margin:0; 
+    position:fixed; 
+    top:100px; 
+    right:0; 
+    bottom:0; 
+    left:200px;
+  }
+
+  .bar {
+    fill: steelblue;
+  }
+
+  .bar:hover {
+    fill: #ED6E00;
+  }
+
+  .x.axis {
+    font-size: 12px;
+  }
+  .y.axis {
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<script>
+
+  var margin = {top: 5, right: 20, bottom: 230, left: 50},
+    width = 800 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var x = d3.scaleBand().range([0, width]).padding(0.1);
+  var y = d3.scaleLinear().range([height, 0]);
+
+  var xAxis = d3.axisBottom(x).ticks(20);
+  var yAxis = d3.axisLeft(y).ticks(10);
+
+  var data = [
+    {"building": "Навч. корпус №1 (Активна)", "value": 69},
+    {"building": "Навч. корпус №1 (Реактивна)", "value": 59},
+    {"building": "Навч. корпус №1 (Генерація)", "value": 40},
+    {"building": "Навч. корпус №2 (255447 Активна)", "value": 78},
+    {"building": "Навч. корпус №2 (255447 Реактивна)", "value": 35},
+    {"building": "Навч. корпус №2 (255447 Генерація)", "value": 100},
+    {"building": "Навч. корпус №2 (255388 Активна)", "value": 25},
+    {"building": "Навч. корпус №2 (255388 Реактивна)", "value": 7},
+    {"building": "Навч. корпус №2 (255388 Генерація)", "value": 10},
+    {"building": "Навч. корпус №2a (0223942 Активна)", "value": 70},
+    {"building": "Навч. корпус №2a(0223942 Реактивна)", "value": 30},
+    {"building": "Навч. корпус №2a(0223942 Генерація)", "value": 12},
+    {"building": "Навч. корпус №2a(0147641 Активна)", "value": 17},
+    {"building": "Навч. корпус №2a(0147641 Реактивна)", "value": 65},
+    {"building": "Навч. корпус №2a(0147641 Генерація)", "value": 48},
+    {"building": "Навч. корпус №6 (0147881 Активна)", "value": 39},
+    {"building": "Навч. корпус №6 (0147881 Реактивна)", "value": 80},
+    {"building": "Навч. корпус №6 (0147901 Активна)", "value": 96},
+    {"building": "Навч. корпус №6 (0147901 Реактивна)", "value": 75},
+    {"building": "Навч. корпус №7 (Активна)", "value": 95},
+    {"building": "Навч. корпус №7 (Реактивна)", "value": 81},
+    {"building": "Комора (Активна)", "value": 84},
+    {"building": "Їдальня №1 (Активна)", "value": 45},
+    {"building": "Гараж (Активна)", "value": 90},
+    {"building": "Гараж (Реактивна)", "value": 120},
+    {"building": "Гараж (Генерація)", "value": 200},
+    {"building": "Полігон (Активна)", "value": 130},
+    {"building": "Буровий павільйон (Активна)", "value": 92},
+    {"building": "Гуртожиток №1 (Активна)", "value": 70},
+    {"building": "Гуртожиток №2 (Активна)", "value": 120},
+    {"building": "Гуртожиток №3 (Активна)", "value": 89},
+    {"building": "Гуртожиток №4 (Активна)", "value": 53},
+    {"building": "Гуртожиток №5 (Активна)", "value": 35},
+    {"building": "Гуртожиток №6 (111617 Активна)", "value": 42},
+    {"building": "Гуртожиток №6 (38469 Активна)", "value": 94},
+    {"building": "Гуртожиток №7 (38399 Активна)", "value": 32},
+    {"building": "Гуртожиток №7 (100387 Активна)", "value": 25},
+    {"building": "Гуртожиток №8 (38152 Активна)", "value": 69},
+    {"building": "Гуртожиток №8 (111578 Активна)", "value": 35},
+    {"building": "Гуртожиток №8 (01022579 Активна)", "value": 91},
+    {"building": "ТП-38 (Активна)", "value": 43},
+    {"building": "ТП-38 (Реактивна)", "value": 36},
+    {"building": "ТП-38 (Генерація)", "value": 73},
+    {"building": "ТП-72 (Активна)", "value": 41},
+    {"building": "ТП-72 (Реактивна)", "value": 50},
+    {"building": "ТП-72 (Генерація)", "value": 77},
+    {"building": "Інст. післядипломної освіти (Активна)", "value": 17}
+  ];
+
+  x.domain(data.map(d => { return d.building; }));
+  y.domain([0, d3.max(data, d => { return d.value; })]);
+
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)" );
+
+  svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+  svg.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", d => { return x(d.building); })
+    .attr("width", x.bandwidth())
+    .attr("y", d => { return y(d.value); })
+    .attr("height", d => { return height - y(d.value); });
+
+</script>
+</body>
+</html>

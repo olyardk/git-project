@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <style>
+  body {
+    margin:0; 
+    position:fixed; 
+    top:100px; 
+    right:0; 
+    bottom:0; 
+    left:200px;
+  }
+
+  .bar {
+    fill: steelblue;
+  }
+
+  .bar:hover {
+    fill: #ED6E00;
+  }
+
+  .x.axis {
+    font-size: 12px;
+  }
+  .y.axis {
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<script>
+
+  var margin = {top: 5, right: 20, bottom: 200, left: 50},
+    width = 800 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var x = d3.scaleBand().range([0, width]).padding(0.4);
+  var y = d3.scaleLinear().range([height, 0]);
+
+  var xAxis = d3.axisBottom(x).ticks(20);
+  var yAxis = d3.axisLeft(y).ticks(10);
+
+  var data = [
+    {"building": "Навчальний корпус №1", "value": 159},
+    {"building": "Гуртожиток №7", "value": 79},
+    {"building": "Гуртожиток №8", "value": 91},
+    {"building": "Котельня", "value": 125},
+    {"building": "Інститут післядипломної освіти", "value": 543}
+  ];
+
+  x.domain(data.map(d => { return d.building; }));
+  y.domain([0, d3.max(data, d => { return d.value; })]);
+
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)" );
+
+  svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+  svg.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", d => { return x(d.building); })
+    .attr("width", x.bandwidth())
+    .attr("y", d => { return y(d.value); })
+    .attr("height", d => { return height - y(d.value); });
+
+</script>
+</body>
+</html>
